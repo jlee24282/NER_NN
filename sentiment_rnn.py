@@ -7,7 +7,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten
+from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten, Conv1D, MaxPooling1D
 from keras.layers.merge import Concatenate
 from keras.preprocessing import sequence
 from keras.models import model_from_json
@@ -106,15 +106,22 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
         print("Vocabulary Size: {:d}".format(len(vocabulary_inv)))
 
     # Build model
+    input_shape = (sequence_length,)
 
     model = Sequential()
     model.add(Embedding(len(vocabulary_inv), embedding_dim, input_length=sequence_length))
+    model.add(Conv1D(32, kernel_size=3,
+                     activation='relu',
+                     input_shape=input_shape))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Conv1D(64, 3, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
     model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size),  return_sequences=True)))
     model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size),  return_sequences=True)))
     model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(final_vec_size, activation='sigmoid'))
-    # model.add(Activation('softmax'))
+    model.add(Activation('softmax'))
     model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
 
     # Train the model
