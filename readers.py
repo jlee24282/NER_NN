@@ -33,7 +33,7 @@ class reader(object):
         :return:
         """
 
-        x, y, vocabulary, vocabulary_inv_list = self.load_data("./data/train.txt")
+        words, x, y, vocabulary, vocabulary_inv_list = self.load_data("./data/train.txt")
         vocabulary_inv = {key: value for key, value in enumerate(vocabulary_inv_list)}
 
         # shuffle_indices = np.random.permutation(np.arange(len(y)))
@@ -52,7 +52,7 @@ class reader(object):
         self.get_stat(y_train.tolist())
 
 
-        x, y, vocabulary, vocabulary_inv_list = self.load_data("./data/test.txt")
+        words, x, y, vocabulary, vocabulary_inv_list = self.load_data("./data/test.txt")
         # vocabulary_inv = {key: value for key, value in enumerate(vocabulary_inv_list)}
 
         # Shuffle data
@@ -62,7 +62,7 @@ class reader(object):
 
         self.get_stat(y_test.tolist())
 
-        return x_train, y_train, x_test, y_test, vocabulary_inv
+        return words, x_train, y_train, x_test, y_test, vocabulary_inv
 
     def load_data(self, datadir):
         """
@@ -77,7 +77,7 @@ class reader(object):
         x = np.array([[vocabulary[word]] for word in words])
         y = np.array(labels)
 
-        return [x, y, vocabulary, vocabulary_inv]
+        return [words, x, y, vocabulary, vocabulary_inv]
 
 
     def load_data_and_labels(self, datadir):

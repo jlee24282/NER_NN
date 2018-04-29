@@ -7,7 +7,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Flatten, Input, MaxPooling1D, Convolution1D, Embedding, LSTM, Bidirectional
+from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten
 from keras.layers.merge import Concatenate
 from keras.preprocessing import sequence
 from keras.models import model_from_json
@@ -32,7 +32,7 @@ logging.basicConfig(format='%(asctime)s: %(message)s',
 # Model Hyperparameters
 verbose = 1
 
-undersampling = 5
+undersampling = 1
 embedding_dim = 50
 filter_sizes = (3, 8)
 num_filters = 10
@@ -41,7 +41,7 @@ hidden_dims = 50
 
 # Training parameters
 batch_size = 64
-num_epochs = 5
+num_epochs = 1
 
 # Prepossessing parameters
 sequence_length = 300
@@ -109,11 +109,12 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
 
     model = Sequential()
     model.add(Embedding(len(vocabulary_inv), embedding_dim, input_length=sequence_length))
-    model.add(Bidirectional(LSTM(64)))
+    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size),  return_sequences=True)))
+    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size),  return_sequences=True)))
     model.add(Dropout(0.5))
-    model.add(Dense(hidden_dims, activation='sigmoid'))
-
-    # try using different optimizers and different optimizer configs
+    model.add(Flatten())
+    model.add(Dense(final_vec_size, activation='sigmoid'))
+    # model.add(Activation('softmax'))
     model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
 
     # Train the model
