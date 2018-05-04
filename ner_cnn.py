@@ -9,6 +9,12 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten, Conv1D, MaxPooling1D
 from keras.preprocessing import sequence
 
+
+"""
+This project is for CS 782 term project
+
+"""
+
 np.random.seed(0)
 logging.basicConfig(format='%(asctime)s: %(message)s',
                     level=logging.INFO,
@@ -28,6 +34,15 @@ final_vec_size = len(readers.NE)
 
 
 def under_sample(n, x_train, x_test, y_train, vocabulary_inv):
+    """
+    Under sample based on data label '0'
+    :param n:
+    :param x_train:
+    :param x_test:
+    :param y_train:
+    :param vocabulary_inv:
+    :return:
+    """
     models = []
     print 'under sample --------------------------------------------------'
     # print x_train
@@ -72,6 +87,14 @@ def under_sample(n, x_train, x_test, y_train, vocabulary_inv):
 
 
 def train_model(x_train, x_test, y_train, vocabulary_inv):
+    """
+    Train model
+    :param x_train:
+    :param x_test:
+    :param y_train:
+    :param vocabulary_inv:
+    :return:
+    """
     model = None
 
     if verbose > 0:
@@ -106,6 +129,11 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
 
 
 def print_confusion_matrix(c_matrix):
+    """
+    Print confusion matrix to evaluate system
+    :param c_matrix:
+    :return:
+    """
     tmp = '\nGold \ Machine'.ljust(18)
     for a in list(c_matrix.get(0)):
         tmp += str(a).ljust(7)

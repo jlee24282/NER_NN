@@ -8,11 +8,21 @@ from keras.utils.np_utils import to_categorical
 # 6 labels + '0' (non tag)
 NE = ['O', 'AdverseReaction', 'Animal', 'DrugClass', 'Factor', 'Negation', 'Severity']
 
+
+"""
+This project is for CS 782 term project
+"""
+
 class reader(object):
     def __init__(self):
         self.ne = []
 
     def get_stat(self, lists):
+        """
+        get static of result
+        :param lists:
+        :return:
+        """
         print len(lists)
         stats = [0] * len(lists[0])
         for lst in lists:
@@ -21,7 +31,7 @@ class reader(object):
 
     def load_all_data(self):
         """
-
+        Load training and testing data.
         :return:
         """
 
@@ -43,7 +53,6 @@ class reader(object):
         # train_len = int(len(x) * 0.9)
         self.get_stat(y_train.tolist())
 
-
         words, x, y, vocabulary, vocabulary_inv_list = self.load_data("./data/test.txt")
         # vocabulary_inv = {key: value for key, value in enumerate(vocabulary_inv_list)}
 
@@ -58,8 +67,7 @@ class reader(object):
 
     def load_data(self, datadir):
         """
-        Loads and preprocessed data for the MR dataset.
-        Returns input vectors, labels, vocabulary, and inverse vocabulary.
+        Preprocessing step
         """
         # Load and preprocess data
         print datadir
@@ -71,18 +79,16 @@ class reader(object):
 
         return [words, x, y, vocabulary, vocabulary_inv]
 
-
     def load_data_and_labels(self, datadir):
         """
-        Loads MR polarity data from files, splits the data into words and generates labels.
-        Returns split sentences and labels.
+        Load data and store words and label information
         """
         # Load data from files
         data = list(open(datadir).readlines())
         data = [s.strip() for s in data]
         x_text = []
         labels = []
-        stastics = [0]* len(NE)
+        stastics = [0] * len(NE)
         for line in data:
             if not line.startswith('-DOCSTART-') and len(line) != 0:
                 info = line.split(' ')
@@ -105,7 +111,7 @@ class reader(object):
             labels[i] = tmp
             stastics[index] += 1
 
-                # print labels[i]
+            # print labels[i]
 
             # labels[i] = NE.index(labels[i])
 
@@ -121,7 +127,6 @@ class reader(object):
         # print(len(positive_labels) + len(negative_labels))
         # print(len(negative_labels))
         return [x_text, y]
-
 
     def build_vocab(self, words):
         """
