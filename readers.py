@@ -5,9 +5,7 @@ from collections import Counter
 
 from keras.utils.np_utils import to_categorical
 
-NE = ['B-AdverseReaction', 'I-AdverseReaction', 'B-Factor', 'B-DrugClass', 'I-DrugClass', 'B-Severity', 'I-Severity', 'B-Animal', 'B-Negation', 'I-Negation', 'I-Factor']
-# NE = ['B-AdverseReaction', 'B-Animal', 'B-DrugClass', 'B-Factor', 'B-Negation', 'B-Severity', 'I-AdverseReaction', 'I-Animal', 'I-DrugClass', 'I-Factor', 'I-Negation', 'I-Severity', 'O']
-NE = ['O', 'B-AdverseReaction', 'B-Animal', 'B-DrugClass', 'B-Factor', 'B-Negation', 'B-Severity', 'I-AdverseReaction', 'I-Animal', 'I-DrugClass', 'I-Factor', 'I-Negation', 'I-Severity']
+# 6 labels + '0' (non tag)
 NE = ['O', 'AdverseReaction', 'Animal', 'DrugClass', 'Factor', 'Negation', 'Severity']
 
 class reader(object):

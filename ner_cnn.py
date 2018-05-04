@@ -89,8 +89,6 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
     model.add(MaxPooling1D(pool_size=2))
     model.add(Conv1D(64, 8, activation='relu'))
     model.add(MaxPooling1D(pool_size=2))
-    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size), return_sequences=True)))
-    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size), return_sequences=True)))
     model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(final_vec_size, activation='sigmoid'))
