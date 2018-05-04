@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a9ad23fe-80d9-474b-907f-3b32afdb0273" name="Default" comment="JJ">
-      <change beforePath="$PROJECT_DIR$/../NER_NN/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NER_NN/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NER_NN/ner_rnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/../NER_NN/ner_rnn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NER_NN/readers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../NER_NN/readers.py" afterDir="false" />
-    </list>
+    <list default="true" id="a9ad23fe-80d9-474b-907f-3b32afdb0273" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,7 +15,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ner_rnn.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ner_rnn.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../NER_NN/ner_rnn.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="666">
@@ -31,11 +27,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ner_rnncnn.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ner_rnncnn.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../NER_NN/ner_rnncnn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="131" column="37" lean-forward="true" selection-start-line="131" selection-start-column="37" selection-end-line="136" selection-end-column="7" />
+            <state relative-caret-position="-180">
+              <caret line="135" column="12" lean-forward="true" selection-start-line="135" selection-start-column="12" selection-end-line="135" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -43,7 +39,7 @@
       <file leaf-file-name="ner_cnn.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../NER_NN/ner_cnn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
+            <state relative-caret-position="-666">
               <caret line="14" selection-start-line="14" selection-end-line="14" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -259,7 +255,14 @@
       <option name="project" value="LOCAL" />
       <updated>1525475836049</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="JJ">
+      <created>1525476135318</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1525476135318</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -408,16 +411,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../NER_NN/ner_cnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../NER_NN/readers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -428,13 +421,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../NER_NN/ner_rnncnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="131" column="37" lean-forward="true" selection-start-line="131" selection-start-column="37" selection-end-line="136" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../NER_NN/ner_rnn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="666">
@@ -442,6 +428,23 @@
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../NER_NN/ner_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-666">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../NER_NN/ner_rnncnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-180">
+          <caret line="135" column="12" lean-forward="true" selection-start-line="135" selection-start-column="12" selection-end-line="135" selection-end-column="12" />
         </state>
       </provider>
     </entry>
