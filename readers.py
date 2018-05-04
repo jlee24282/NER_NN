@@ -8,10 +8,10 @@ from keras.utils.np_utils import to_categorical
 # 6 labels + '0' (non tag)
 NE = ['O', 'AdverseReaction', 'Animal', 'DrugClass', 'Factor', 'Negation', 'Severity']
 
-
 """
 This project is for CS 782 term project
 """
+
 
 class reader(object):
     def __init__(self):
