@@ -17,8 +17,7 @@ To see the result of rnn + cnn
 
 ## Dependencies
 * python 2.7
-* The [Keras](http://keras.io/) Deep Learning library and most recent [Theano](http://deeplearning.net/software/theano/install.html#install) backend should be installed. You can use pip for that.
-Not tested with TensorFlow, but should work.
+* The [Keras](http://keras.io/) Deep Learning library and most recent Tensorflow backend should be installed.
 
 ## Author of the code
 
