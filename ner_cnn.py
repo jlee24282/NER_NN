@@ -1,60 +1,33 @@
 import numpy as np
 from readers import reader
 import readers
-from w2v import train_word2vec
 import os
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
-from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten, Conv1D, MaxPooling1D
-from keras.layers.merge import Concatenate
-from keras.preprocessing import sequence
-from keras.models import model_from_json
-from keras.utils.np_utils import to_categorical
-
-import time
 import logging
 
-from collections import Counter
-from sklearn.datasets import make_classification
-from imblearn.under_sampling import RandomUnderSampler
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+from keras.models import Sequential, Model
+from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten, Conv1D, MaxPooling1D
+from keras.preprocessing import sequence
 
 np.random.seed(0)
-
 logging.basicConfig(format='%(asctime)s: %(message)s',
                     level=logging.INFO,
                     datefmt='%m/%d/%Y %I:%M:%S %p')
-
-# ---------------------- Parameters section -------------------
-# Model type. See Kim Yoon's Convolutional Neural Networks for Sentence Classification, Section 3
-
-# Model Hyperparameters
 verbose = 1
 
-undersampling = 1
+undersampling = 5
 embedding_dim = 50
-filter_sizes = (3, 8)
-num_filters = 10
-dropout_prob = (0.25, 0.8)
-hidden_dims = 50
 
 # Training parameters
 batch_size = 64
-num_epochs = 1
+num_epochs = 5
 
 # Prepossessing parameters
 sequence_length = 300
-
-# Word2Vec parameters (see train_word2vec)
-min_word_count = 1
-context = 10
-
 final_vec_size = len(readers.NE)
 
 
 def under_sample(n, x_train, x_test, y_train, vocabulary_inv):
-    rus = RandomUnderSampler(ratio='all', random_state=1)
     models = []
     print 'under sample --------------------------------------------------'
     # print x_train
@@ -114,31 +87,25 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
                      activation='relu',
                      input_shape=input_shape))
     model.add(MaxPooling1D(pool_size=2))
-    model.add(Conv1D(64, 3, activation='relu'))
+    model.add(Conv1D(64, 8, activation='relu'))
     model.add(MaxPooling1D(pool_size=2))
-    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size),  return_sequences=True)))
-    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size),  return_sequences=True)))
+    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size), return_sequences=True)))
+    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size), return_sequences=True)))
     model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(final_vec_size, activation='sigmoid'))
-    model.add(Activation('softmax'))
+    # model.add(Activation('softmax'))
     model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
+
 
     # Train the model
     if verbose > 0:
         print 'x_train', len(x_train), x_train
         print 'y_train', len(y_train), y_train
-        # print 'batch_size', batch_size
-        # print 'num_epochs', num_epochs
-        # print 'x_test', len(x_test), x_test
-        # print 'y_test', len(y_test), y_test
-        # print 'shape', x_train.shape
-        # print 'shape', y_train.shape
-        # print 'shape', x_test.shape
-        # print 'shape', y_test.shape
     model.fit(x_train, y_train, batch_size=batch_size, epochs=num_epochs)
 
     return model
+
 
 def print_confusion_matrix(c_matrix):
     tmp = '\nGold \ Machine'.ljust(18)
@@ -153,6 +120,7 @@ def print_confusion_matrix(c_matrix):
         tmp += '\n'
 
     print tmp
+
 
 def main():
     # Data Preparation
@@ -170,20 +138,6 @@ def main():
         print y_train
 
     models = under_sample(undersampling, x_train, x_test, y_train, vocabulary_inv)
-
-    # # score, acc = model.evaluate(x_test, y_test, batch_size=batch_size, show_accuracy=True)
-    #
-    # # save model
-    # json_string = model.to_json()
-    # with open('model.json', 'w+') as f:
-    #     f.write(json_string)
-
-    # load json and create model
-    # json_file = open('model.json', 'r')
-    # loaded_model_json = json_file.read()
-    # json_file.close()
-    # loaded_model = model_from_json(loaded_model_json)
-    #
 
     prds = []
     predictions = []
@@ -233,7 +187,6 @@ def main():
             row = row.copy()
             row.update({p: row.get(p) + 1})
             c_matrix.update({g: row})
-
 
             # print np.argmax(predictions[i]) == np.argmax(y_test[i]), \
             #     'gold: ', \

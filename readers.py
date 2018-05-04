@@ -8,6 +8,8 @@ from keras.utils.np_utils import to_categorical
 NE = ['B-AdverseReaction', 'I-AdverseReaction', 'B-Factor', 'B-DrugClass', 'I-DrugClass', 'B-Severity', 'I-Severity', 'B-Animal', 'B-Negation', 'I-Negation', 'I-Factor']
 # NE = ['B-AdverseReaction', 'B-Animal', 'B-DrugClass', 'B-Factor', 'B-Negation', 'B-Severity', 'I-AdverseReaction', 'I-Animal', 'I-DrugClass', 'I-Factor', 'I-Negation', 'I-Severity', 'O']
 NE = ['O', 'B-AdverseReaction', 'B-Animal', 'B-DrugClass', 'B-Factor', 'B-Negation', 'B-Severity', 'I-AdverseReaction', 'I-Animal', 'I-DrugClass', 'I-Factor', 'I-Negation', 'I-Severity']
+NE = ['O', 'AdverseReaction', 'Animal', 'DrugClass', 'Factor', 'Negation', 'Severity']
+
 class reader(object):
     def __init__(self):
         self.ne = []
@@ -18,14 +20,6 @@ class reader(object):
         for lst in lists:
             stats[lst.index(1)] += 1
         print 'stats', stats
-
-    def to_one_hot(self, labels, dimension=len(NE)):
-        results = np.zeros((len(labels), dimension))
-
-        for i, label in enumerate(labels):
-            print i, label
-            results[i, label] = 1.
-        return results
 
     def load_all_data(self):
         """
@@ -97,6 +91,8 @@ class reader(object):
                 word = info[0]
                 gram = info[1]
                 label = info[2]
+                if '-' in label:
+                    label = label.split('-')[1]
                 # if label != 'O':
                 x_text.append(word)
                 labels.append(label)

@@ -1,13 +1,12 @@
 import numpy as np
 from readers import reader
 import readers
-from w2v import train_word2vec
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Flatten, Input, MaxPooling1D, Convolution1D, Embedding
+from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional, Activation, Flatten, Conv1D, MaxPooling1D
 from keras.layers.merge import Concatenate
 from keras.preprocessing import sequence
 from keras.models import model_from_json
@@ -26,32 +25,16 @@ logging.basicConfig(format='%(asctime)s: %(message)s',
                     level=logging.INFO,
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
-# ---------------------- Parameters section -------------------
-# Model type. See Kim Yoon's Convolutional Neural Networks for Sentence Classification, Section 3
-
-model_type = "CNN-non-static"  # CNN-rand|CNN-non-static
-
-# Model Hyperparameters
 verbose = 1
 
+# Training parameters
 undersampling = 5
 embedding_dim = 50
-filter_sizes = (3, 8)
-num_filters = 10
-dropout_prob = (0.25, 0.8)
-hidden_dims = 50
-
-# Training parameters
-batch_size = 64
 num_epochs = 5
+batch_size = 64
 
 # Prepossessing parameters
 sequence_length = 300
-
-# Word2Vec parameters (see train_word2vec)
-min_word_count = 1
-context = 10
-
 final_vec_size = len(readers.NE)
 
 
@@ -107,47 +90,24 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
         print("x_train shape:", x_train.shape)
         print("Vocabulary Size: {:d}".format(len(vocabulary_inv)))
 
-    # Prepare embedding layer weights and convert inputs for static model
-    logging.info("Model type is" + model_type)
-    if model_type == "CNN-non-static":
-        embedding_weights = train_word2vec((x_train, x_test), vocabulary_inv, num_features=embedding_dim,
-                                           min_word_count=min_word_count, context=context)
-    elif model_type == "CNN-rand":
-        embedding_weights = None
-    else:
-        raise ValueError("Unknown model type")
-
     # Build model
     input_shape = (sequence_length,)
-    model_input = Input(shape=input_shape)
 
-    z = Embedding(len(vocabulary_inv), embedding_dim, input_length=sequence_length, name="embedding")(model_input)
-    z = Dropout(dropout_prob[0])(z)
-
-    # Convolutional block
-    conv_blocks = []
-    for sz in filter_sizes:
-        conv = Convolution1D(filters=num_filters,
-                             kernel_size=sz,
-                             padding="valid",
-                             activation="relu")(z)
-        conv = MaxPooling1D(pool_size=2)(conv)
-        conv = Flatten()(conv)
-        conv_blocks.append(conv)
-
-    z = Concatenate()(conv_blocks) if len(conv_blocks) > 1 else conv_blocks[0]
-    z = Dropout(dropout_prob[1])(z)
-    z = Dense(hidden_dims, activation="relu")(z)
-    model_output = Dense(final_vec_size, activation="sigmoid")(z)
-    model = Model(model_input, model_output)
-    model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
-
-    # Initialize weights with word2vec
-    if model_type == "CNN-non-static":
-        weights = np.array([v for v in embedding_weights.values()])
-        print("Initializing embedding layer with word2vec weights, shape", weights.shape)
-        embedding_layer = model.get_layer("embedding")
-        embedding_layer.set_weights([weights])
+    model = Sequential()
+    model.add(Embedding(len(vocabulary_inv), embedding_dim, input_length=sequence_length))
+    model.add(Conv1D(32, kernel_size=3,
+                     activation='relu',
+                     input_shape=input_shape))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Conv1D(64, 3, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size), return_sequences=True)))
+    model.add(Bidirectional(LSTM(64, input_shape=(len(x_train), final_vec_size), return_sequences=True)))
+    model.add(Dropout(0.5))
+    model.add(Flatten())
+    model.add(Dense(final_vec_size, activation='sigmoid'))
+    # model.add(Activation('softmax'))
+    model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
 
     # Train the model
     if verbose > 0:
@@ -165,6 +125,7 @@ def train_model(x_train, x_test, y_train, vocabulary_inv):
 
     return model
 
+
 def print_confusion_matrix(c_matrix):
     tmp = '\nGold \ Machine'.ljust(18)
     for a in list(c_matrix.get(0)):
@@ -178,6 +139,7 @@ def print_confusion_matrix(c_matrix):
         tmp += '\n'
 
     print tmp
+
 
 def main():
     # Data Preparation
@@ -258,7 +220,6 @@ def main():
             row = row.copy()
             row.update({p: row.get(p) + 1})
             c_matrix.update({g: row})
-
 
             # print np.argmax(predictions[i]) == np.argmax(y_test[i]), \
             #     'gold: ', \
