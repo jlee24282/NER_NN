@@ -69,9 +69,11 @@ class reader(object):
         """
         Preprocessing step
         """
-        # Load and preprocess data
         print datadir
+        # get words and labesl from the file
         words, labels = self.load_data_and_labels(datadir)
+
+        # build dictionary of words
         vocabulary, vocabulary_inv = self.build_vocab(words)
 
         x = np.array([[vocabulary[word]] for word in words])
@@ -133,13 +135,10 @@ class reader(object):
         Builds a vocabulary mapping from word to index based on the sentences.
         Returns vocabulary mapping and inverse vocabulary mapping.
         """
-        # Build vocabulary
         word_counts = Counter(words)
         print word_counts
-        # Mapping from index to word
-        # for x in word_counts.most_common():
-        #     print x
         vocabulary_inv = [x[0] for x in word_counts.most_common()]
+
         print 'words', words[:50]
         print 'inventory', vocabulary_inv[:50]
         # Mapping from word to index
